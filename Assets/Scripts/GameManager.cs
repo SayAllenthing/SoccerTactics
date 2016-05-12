@@ -60,24 +60,37 @@ public class GameManager : MonoBehaviour
 	void OnClickTile(Tile t)
 	{
 		if(SelectedPlayer == null)
+		{
 			TheField.SelectTile(t);
+		}
 		else
 		{
-			if(t.bIsNetTile)
+			if(SelectedPlayer.HasBall())
 			{
-				//Do shot
+				if(t.bIsNetTile)
+				{
+					//Do shot
+					Ball.TheBall.Shoot(t);
+				}
+				else if(t.HasPlayerOnTeam(CurrentTurn))
+				{
+					//Do pass
+					Ball.TheBall.Pass(t.GetPlayer(CurrentTurn));
+				}
 			}
-			else if(t.HasPlayerOnTeam(CurrentTurn))
+			else //Move
 			{
-				//Do pass
-			}
-			else
-			{
+				if(!SelectedPlayer.IsLegalMove(t.X, t.Y))
+				{
+					return;
+				}
+
 				SelectedPlayer.Move(t.X, t.Y);
-				SelectedPlayer = null;
-				TheField.DeselectTiles();
-				OnTurnEnd();
 			}
+
+			SelectedPlayer = null;
+			TheField.DeselectTiles();
+			OnTurnEnd();
 		}
 	}
 

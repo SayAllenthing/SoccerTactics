@@ -1,11 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Field.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Ball.cs">
     <Files>
-      <File FileName="Assets\Scripts\Player.cs" Line="25" Column="20" />
-      <File FileName="Assets\Scripts\Tile.cs" Line="64" Column="17" />
-      <File FileName="Assets\Scripts\Field.cs" Line="137" Column="89" />
-      <File FileName="Assets\Scripts\GameManager.cs" Line="60" Column="26" />
+      <File FileName="Assets\Scripts\Ball.cs" Line="77" Column="3" />
+      <File FileName="Assets\Scripts\Player.cs" Line="61" Column="17" />
+      <File FileName="Assets\Scripts\Tile.cs" Line="75" Column="22" />
+      <File FileName="Assets\Scripts\Field.cs" Line="139" Column="26" />
+      <File FileName="Assets\Scripts\GameManager.cs" Line="92" Column="29" />
       <File FileName="Assets\Scripts\Formation.cs" Line="15" Column="30" />
     </Files>
   </MonoDevelop.Ide.Workbench>

@@ -10,7 +10,7 @@ public class Field : MonoBehaviour
     public GameObject Tile;
     public GameObject HomePlayer;
     public GameObject AwayPlayer;
-	public GameObject Ball;
+	public GameObject BallPrefab;
 
     public int Width = 15;
     public int Length = 28;
@@ -43,11 +43,12 @@ public class Field : MonoBehaviour
         }
 
 		CreateNetTiles();
+		CreateBall(8, Width/2);
 
         CreateTeam(true);
         CreateTeam(false);
 
-		CreateBall(8, Width/2);
+
     }
 
 	void CreateNetTiles()
@@ -134,8 +135,8 @@ public class Field : MonoBehaviour
 	void CreateBall(int x, int y)
 	{
 		Tile t = Field.Map[x][y];
-		GameObject p = GameObject.Instantiate(Ball, t.transform.position + (Vector3.up * 0.5f), Quaternion.identity) as GameObject;
-
+		GameObject p = GameObject.Instantiate(BallPrefab, t.transform.position + (Vector3.up * 0.5f), Quaternion.identity) as GameObject;
+		Ball.TheBall.Init(x,y);
 	}
 
     public void SelectTile(Tile t)

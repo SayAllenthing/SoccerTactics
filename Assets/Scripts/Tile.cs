@@ -66,4 +66,15 @@ public class Tile : MonoBehaviour {
 
 		return false;
 	}
+
+	public Player GetPlayer(string team)
+	{
+		for(int i = 0; i < Players.Count; i++)
+		{
+			if(Players[i].Team == team)
+				return Players[i];
+		}
+
+		return null;
+	}
 }
