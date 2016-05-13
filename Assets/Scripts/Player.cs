@@ -15,13 +15,25 @@ public class Player : MonoBehaviour {
 
 	int MoveDist = 2;
 
-	public void Init(int x, int y, bool keeper, string team)
+	int InitialX;
+	int InitialY;
+
+	PlayerStats Stats;
+
+	public void Init(int x, int y, bool keeper, string team, int number)
 	{		
 		Move(x,y);
 		if(keeper)
 			SetKeeper();
 
+		InitialX = x;
+		InitialY = y;
+
 		Team = team;
+
+		Stats = new PlayerStats();
+		Stats.GeneratePlayer();
+		Stats.Name = team + " Player " + number;
 	}
 
 	void SetKeeper()
@@ -86,4 +98,6 @@ public class Player : MonoBehaviour {
 	}
 
 	public bool HasBall() { return bHasBall; }
+
+	public PlayerStats GetStats() { return Stats; }
 }

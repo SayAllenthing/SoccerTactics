@@ -15,7 +15,15 @@ public class GameManager : MonoBehaviour
 
 	public string CurrentTurn = "Home";
 	int CurrentActions = 2;
+
+	//Move UI
 	public Text TurnText;
+	public Text ActionsText;
+	public CanvasGroup PlayerCanvas;
+	public Text NameText;
+	public Text ShootingText;
+	public Text PassingText;
+	public Text DefenseText;
 
 	void Start()
 	{
@@ -35,6 +43,7 @@ public class GameManager : MonoBehaviour
         else if (Input.GetMouseButtonDown(1))
         {
             TheField.DeselectTiles();
+			SetSelectedPlayer(null);
         }
 	}
 
@@ -64,22 +73,21 @@ public class GameManager : MonoBehaviour
 			TheField.SelectTile(t);
 		}
 		else
-		{
-			if(SelectedPlayer.HasBall())
+		{			
+			if(t.bIsNetTile && SelectedPlayer.HasBall())
 			{
-				if(t.bIsNetTile)
-				{
-					//Do shot
-					Ball.TheBall.Shoot(t);
-				}
-				else if(t.HasPlayerOnTeam(CurrentTurn))
-				{
-					//Do pass
-					Ball.TheBall.Pass(t.GetPlayer(CurrentTurn));
-				}
+				//Do shot
+				Ball.TheBall.Shoot(t);
 			}
-			else //Move
+			else if(t.HasPlayerOnTeam(CurrentTurn) && SelectedPlayer.HasBall())
 			{
+				//Do pass
+				GameActionResolver.Instance.ResolvePass(SelectedPlayer, t.GetPlayer(CurrentTurn));
+				Ball.TheBall.Pass(t.GetPlayer(CurrentTurn));
+			}
+			else
+			{
+				//Move
 				if(!SelectedPlayer.IsLegalMove(t.X, t.Y))
 				{
 					return;
@@ -94,21 +102,46 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
+	public void SetSelectedPlayer(Player p)
+	{
+		SelectedPlayer = p;
+
+		DisplayPlayerStats();
+	}
+
+	void DisplayPlayerStats()
+	{
+		if(SelectedPlayer == null)
+		{
+			PlayerCanvas.alpha = 0;
+			return;
+		}
+
+		PlayerStats ps = SelectedPlayer.GetStats();
+
+		NameText.text = ps.Name;
+		ShootingText.text = ps.coreStats.Shooting.ToString();
+		PassingText.text = ps.coreStats.Passing.ToString();
+		DefenseText.text = ps.coreStats.Tackling.ToString();
+
+		PlayerCanvas.alpha = 1;
+	}
+
 	void OnTurnEnd()
 	{
 		CurrentActions--;
-		if(CurrentActions > 0)
-			return;
 
-		if(CurrentTurn == "Home")
-			CurrentTurn = "Away";
-		else
-			CurrentTurn = "Home";
+		if(CurrentActions <= 0)
+		{
+			if(CurrentTurn == "Home")
+				CurrentTurn = "Away";
+			else
+				CurrentTurn = "Home";
+
+			CurrentActions = 2;
+		}
 
 		TurnText.text = "Current Turn: " + CurrentTurn;
-
-		CurrentActions = 2;
-	}
-
-   
+		ActionsText.text = "Actions: " + CurrentActions;
+	}   
 }

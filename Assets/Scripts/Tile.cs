@@ -33,12 +33,18 @@ public class Tile : MonoBehaviour {
         GetComponent<Renderer>().material = MatSelected;
 
 		string team = GameManager.Instance.CurrentTurn;
+		Player p = null;
 
 		for(int i = 0; i < Players.Count; i++)
 		{
 			if(!Players[i].bIsKeeper && Players[i].Team == team)
-				GameManager.Instance.SelectedPlayer = Players[i];
+			{
+				p = Players[i];
+				break;
+			}
 		}
+
+		GameManager.Instance.SetSelectedPlayer(p);
     }
 
     public void Deselect()

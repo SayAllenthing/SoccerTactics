@@ -10,6 +10,8 @@ public class Ball : MonoBehaviour
 
 	Player Owner;
 
+	public AnimationCurve HeightCurve;
+
 	// Use this for initialization
 	void Awake () 
 	{
@@ -26,32 +28,55 @@ public class Ball : MonoBehaviour
 		Move(x,y);
 	}
 
-	public void Move(int x, int y)
+	public void Move(int x, int y, bool ForcePosition = true)
 	{
 		X = x;
 		Y = y;
 
-		Tile t = Field.Map[x][y];
-		transform.position = t.transform.position + new Vector3(0.25f, 0.25f, -0.15f);
+		if(ForcePosition)
+		{
+			Tile t = Field.Map[x][y];
+			transform.position = t.transform.position + new Vector3(0.25f, 0.25f, -0.15f);
+		}
 	}
 
 	public void Pass(Player p)
 	{
 		p.GetBall();
-		Kick(p.X, p.Y);
+		Kick(p.MyTile);
+	}
+
+	public void PassFail(Tile t)
+	{
+		Owner.LoseBall();
+		Kick(t);
+
+		if(t.Players.Count > 0)
+		{
+			t.Players[0].GetBall();
+		}
 	}
 
 	public void Shoot(Tile t)
 	{
 		Owner.LoseBall();
-		StartCoroutine(MoveObject(t.transform.position + new Vector3(0.25f, 0.25f, -0.15f), 1f));
+		Kick(t);
 	}
 
-	void Kick(int destX, int destY)
+	void Kick(Tile t)
 	{
-		Tile t = Field.Map[destX][destY];
+		float time = GetTravelTime(t.X, t.Y);
 
-		StartCoroutine(MoveObject(t.transform.position + new Vector3(0.25f, 0.25f, -0.15f), 1f));
+		StartCoroutine(MoveObject(t.transform.position + new Vector3(0.25f, 0.25f, -0.15f), time));
+		Move(t.X, t.Y, false);
+	}
+
+	float GetTravelTime(int x, int y)
+	{
+		int dx = Mathf.Abs(x - X);
+		int dy = Mathf.Abs(y - Y);
+
+		return (float)(dx + dy) * 0.1f;
 	}
 
 	public void SetOwner(Player p)
@@ -71,7 +96,9 @@ public class Ball : MonoBehaviour
 		while (i < 1.0f) 
 		{
 			i += Time.deltaTime * rate;
-			transform.position = Vector3.Lerp(startPos, endPos, i);
+			Vector3 pos = Vector3.Lerp(startPos, endPos, i);
+			pos.y = 0.25f + HeightCurve.Evaluate(i) * 2;
+			transform.position = pos;
 			yield return new WaitForEndOfFrame();
 		}
 

@@ -114,22 +114,22 @@ public class Field : MonoBehaviour
             int x = (int)(Positions[i].x * Forward) + StartX + ModX;
             int y = (int)Positions[i].y + StartY;
 
-			CreatePlayer(new Vector2(x, y), Prefab, bHome);
+			CreatePlayer(new Vector2(x, y), Prefab, bHome, 11-i);
         }
 
         //Keeper
         int KeeperX = StartX - ((Length/2 - 1) * Forward);
-        CreatePlayer(new Vector2(KeeperX , StartY), Prefab, bHome, true);
+        CreatePlayer(new Vector2(KeeperX , StartY), Prefab, bHome, 1, true);
     }
 
-	void CreatePlayer(Vector2 pos, GameObject Player, bool home, bool bIsKeeper = false)
+	void CreatePlayer(Vector2 pos, GameObject Player, bool home, int number, bool bIsKeeper = false)
     {
         Tile t = Field.Map[(int)pos.x][(int)pos.y];
 		GameObject p = GameObject.Instantiate(Player, t.transform.position, Quaternion.identity) as GameObject;
 
 		string team = home ? "Home" : "Away";
 
-		p.GetComponent<Player>().Init((int)pos.x, (int)pos.y, bIsKeeper, team);
+		p.GetComponent<Player>().Init((int)pos.x, (int)pos.y, bIsKeeper, team, number);
     }
 
 	void CreateBall(int x, int y)
