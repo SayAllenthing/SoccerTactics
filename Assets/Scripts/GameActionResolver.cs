@@ -5,6 +5,8 @@ public class GameActionResolver : MonoBehaviour
 {
 	public static GameActionResolver Instance;
 
+    public Tile FailedTile;
+
 	void Start()
 	{
 		if(Instance != null)
@@ -22,10 +24,22 @@ public class GameActionResolver : MonoBehaviour
 		int roll = Random.Range(1,20);
 		int final = roll + p1.GetStats().coreStats.Passing/2;
 
-		if(final >= difficulty)
-			return true;
-		else
-			Debug.Log("Failed Pass: " + final + " : " + difficulty + ", Roll " + roll);
+        Debug.Log("Pass Difficulty: " + difficulty + ", Roll: " + roll + "+(" + (p1.GetStats().coreStats.Passing / 2) + ")");
+
+        if (final >= difficulty)
+            return true;
+        else
+        {
+            int x = t2.X;
+            int y = t2.Y;
+            while (x == t2.X && y == t2.Y)
+            {
+                x = t2.X + Random.Range(-2, 2);
+                y = t2.Y + Random.Range(-2, 2);
+            }
+
+            FailedTile = Field.Instance.GetTile(x, y);
+        }
 
 		return false;
 	}

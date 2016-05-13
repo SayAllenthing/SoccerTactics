@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Field : MonoBehaviour 
 {
+    public static Field Instance;
     public static List<List<Tile>> Map = new List<List<Tile>>();
 	public List<Tile> NetTiles = new List<Tile>();
 
@@ -22,6 +23,11 @@ public class Field : MonoBehaviour
     // Use this for initialization
     void Start () 
     {
+        if(Instance != null)
+            Instance = null;
+
+        Instance = this;
+
         GenerateField();
     }
 
@@ -153,5 +159,13 @@ public class Field : MonoBehaviour
         for (int x = 0; x < Length; x++)
             for (int y = 0; y < Width; y++)
                 Map[x][y].Deselect();
+    }
+
+    public Tile GetTile(int x, int y)
+    {
+        x = Mathf.Clamp(x, 0, Length - 1);
+        y = Mathf.Clamp(y, 0, Width - 1);
+
+        return Map[x][y];
     }
 }

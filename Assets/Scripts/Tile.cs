@@ -37,7 +37,7 @@ public class Tile : MonoBehaviour {
 
 		for(int i = 0; i < Players.Count; i++)
 		{
-			if(!Players[i].bIsKeeper && Players[i].Team == team)
+			if(Players[i].Team == team)
 			{
 				p = Players[i];
 				break;

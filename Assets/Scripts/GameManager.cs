@@ -82,8 +82,10 @@ public class GameManager : MonoBehaviour
 			else if(t.HasPlayerOnTeam(CurrentTurn) && SelectedPlayer.HasBall())
 			{
 				//Do pass
-				GameActionResolver.Instance.ResolvePass(SelectedPlayer, t.GetPlayer(CurrentTurn));
-				Ball.TheBall.Pass(t.GetPlayer(CurrentTurn));
+                if (GameActionResolver.Instance.ResolvePass(SelectedPlayer, t.GetPlayer(CurrentTurn)))
+                    Ball.TheBall.Pass(t.GetPlayer(CurrentTurn));
+                else
+                    Ball.TheBall.PassFail(GameActionResolver.Instance.FailedTile);
 			}
 			else
 			{
